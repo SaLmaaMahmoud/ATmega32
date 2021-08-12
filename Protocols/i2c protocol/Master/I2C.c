@@ -45,21 +45,21 @@ void i2c_voidInit(I2C_PRESCALER pre)
 /* Send Start condition */
 void i2c_voidStart(void)
 {
-	SET_BIT(TWCR , TWINT) ;			//Clear flag
-	SET_BIT(TWCR , TWSTA) ;			//Send start
-	SET_BIT(TWCR , TWEN)  ;			//Enable I2C
+	SET_BIT(TWCR , TWINT) ;				//Clear flag
+	SET_BIT(TWCR , TWSTA) ;				//Send start
+	SET_BIT(TWCR , TWEN)  ;				//Enable I2C
 	
-	while( !(TWCR & (1<<TWINT) ) ){};				//Wait for TWINT Flag set
+	while( !(TWCR & (1<<TWINT) ) ){};		//Wait for TWINT Flag set
 }
 
 /* Send Stop condition */
 void i2c_voidStop(void)
 {
-	SET_BIT(TWCR , TWINT) ;			//Clear flag
-	SET_BIT(TWCR , TWSTO) ;			//Send stop
-	SET_BIT(TWCR , TWEN)  ;			//Enable I2C
+	SET_BIT(TWCR , TWINT) ;				//Clear flag
+	SET_BIT(TWCR , TWSTO) ;				//Send stop
+	SET_BIT(TWCR , TWEN)  ;				//Enable I2C
 	
-	while( !(TWCR & (1<<TWINT) ) ){};				//Wait for TWINT Flag set
+	while( !(TWCR & (1<<TWINT) ) ){};		//Wait for TWINT Flag set
 }
 
 /* Send data */
@@ -67,34 +67,36 @@ void i2c_voidSend_Data(u8 data)
 {
 	TWDR = data ;
 	
-	SET_BIT(TWCR , TWINT) ;			//Clear flag
-	SET_BIT(TWCR , TWEN)  ;			//Enable I2C
+	SET_BIT(TWCR , TWINT) ;				//Clear flag
+	SET_BIT(TWCR , TWEN)  ;				//Enable I2C
 		
-	while( !(TWCR & (1<<TWINT) ) ){};				//Wait for TWINT Flag set
+	while( !(TWCR & (1<<TWINT) ) ){};		//Wait for TWINT Flag set
 }
 
 /* Check Acknowledge Bit */
 u8 i2c_u8Read_Ack(void)
 {
-	SET_BIT(TWCR , TWINT) ;			//Clear flag
-	SET_BIT(TWCR , TWEN)  ;			//Enable I2C
-	SET_BIT(TWCR , TWEA)  ;			//Enable Ack
+	SET_BIT(TWCR , TWINT) ;				//Clear flag
+	SET_BIT(TWCR , TWEN)  ;				//Enable I2C
+	SET_BIT(TWCR , TWEA)  ;				//Enable Ack
 		
-	while( !(TWCR & (1<<TWINT) ) ){};				//Wait for TWINT Flag set
+	while( !(TWCR & (1<<TWINT) ) ){};		//Wait for TWINT Flag set
 		
 	return TWDR ;
 }
 
+/* Read NACK */
 u8 i2c_u8Read_NACK(void)
 {
-	SET_BIT(TWCR , TWINT) ;			//Clear flag
-	SET_BIT(TWCR , TWEN)  ;			//Enable I2C
+	SET_BIT(TWCR , TWINT) ;				//Clear flag
+	SET_BIT(TWCR , TWEN)  ;				//Enable I2C
 	
-	while( !(TWCR & (1<<TWINT) ) ){};				//Wait for TWINT Flag set
+	while( !(TWCR & (1<<TWINT) ) ){};		//Wait for TWINT Flag set
 	
 	return TWDR ;
 }
 
+/* Get status */
 u8 i2c_u8get_Status(void)
 {
 	u8 status;
