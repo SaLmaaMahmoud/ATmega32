@@ -69,7 +69,16 @@ void TMR_voidSetTimer0Count(u8 value)
 	TCNT_0 = value ;
 }
 
-u8 TMR_u16GetTimer0Count(void){	u8 value = TCNT_0 ;		return value ;}//Timer 1
+
+u8 TMR_u16GetTimer0Count(void)
+{
+	u8 value = TCNT_0 ;
+	
+	return value ;
+}
+
+
+//Timer 1
 void TMR_voidInitTimer1(prescallar pres , State interupt , Modes Mode)
 {
 	if (Mode == CTC)
@@ -128,7 +137,15 @@ void TMR_voidSetTimer1Count(u8 value)
 	TCNT_1 = value ;
 }
 
-u8 TMR_u16GetTimer1Count(void){	u8 value = TCNT_1 ;		return value ;}//Timer 2
+u8 TMR_u16GetTimer1Count(void)
+{
+	u8 value = TCNT_1 ;
+	
+	return value ;
+}
+
+
+//Timer 2
 void TMR_voidInitTimer2(prescallar pres , State interupt , Modes Mode)
 {
 	if (Mode == CTC)
@@ -184,4 +201,9 @@ void TMR_voidSetTimer2Count(u8 value)
 	TCNT_2 = value ;
 }
 
-u8 TMR_u16GetTimer2Count(void){	u8 value = TCNT_2 ;		return value ;}
+u8 TMR_u16GetTimer2Count(void)
+{
+	u8 value = TCNT_2 ;
+	
+	return value ;
+}
