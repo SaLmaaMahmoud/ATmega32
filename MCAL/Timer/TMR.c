@@ -13,9 +13,17 @@
 #include "GPIO.h"
 #include "TMR.h"
 
+
 //Timer 0
-void TMR_voidInitTimer0(prescallar pres , State interupt , Modes Mode)
+void TMR_voidInitTimer0(prescallar pres , Interrupt_State interupt , Modes Mode)
 {
+	CLEAR_BIT(TCCR_0 , CS00) ;
+	CLEAR_BIT(TCCR_0 , CS01) ;
+	CLEAR_BIT(TCCR_0 , CS02) ;
+	
+	CLEAR_BIT(TCCR_0 , WGM00) ;
+	CLEAR_BIT(TCCR_0 , WGM01) ;
+	
 	if (Mode == CTC)
 	{
 		SET_BIT(TCCR_0 , 3) ;
@@ -62,13 +70,13 @@ void TMR_voidInitTimer0(prescallar pres , State interupt , Modes Mode)
 			default:
 				break;
 		}
+		
 }
 
 void TMR_voidSetTimer0Count(u8 value)
 {
 	TCNT_0 = value ;
 }
-
 
 u8 TMR_u16GetTimer0Count(void)
 {
@@ -79,8 +87,12 @@ u8 TMR_u16GetTimer0Count(void)
 
 
 //Timer 1
-void TMR_voidInitTimer1(prescallar pres , State interupt , Modes Mode)
-{
+void TMR_voidInitTimer1(prescallar pres , Interrupt_State interupt , Modes Mode)
+{	CLEAR_BIT(TCCR_1B , CS10) ;
+
+	CLEAR_BIT(TCCR_1B , CS11) ;
+	CLEAR_BIT(TCCR_1B , CS12) ;
+	
 	if (Mode == CTC)
 	{
 		SET_BIT(TCCR_1B , 4) ;
@@ -89,7 +101,8 @@ void TMR_voidInitTimer1(prescallar pres , State interupt , Modes Mode)
 		TCCR_1B = 0x00 ;
 	}
 	
-	if (interupt == Enable){
+	sei() ;
+	if ((interupt == Enable) && (Mode != CTC)){
 		SET_BIT(TIMSK_ , TIMSK_TOIE1) ;			//Enable Timer interrupt
 	}
 	
@@ -130,6 +143,7 @@ void TMR_voidInitTimer1(prescallar pres , State interupt , Modes Mode)
 		default:
 			break;
 	}
+	
 }
 
 void TMR_voidSetTimer1Count(u8 value)
@@ -146,15 +160,31 @@ u8 TMR_u16GetTimer1Count(void)
 
 
 //Timer 2
-void TMR_voidInitTimer2(prescallar pres , State interupt , Modes Mode)
+void TMR_voidInitTimer2(prescallar pres , Interrupt_State interupt , Modes Mode)
 {
-	if (Mode == CTC)
-	{
-		SET_BIT(TCCR_2 , 3) ;
-	}
+	CLEAR_BIT(TCCR_2 , CS20) ;
+	CLEAR_BIT(TCCR_2 , CS21) ;
+	CLEAR_BIT(TCCR_2 , CS22) ;
 	
-	if (interupt == Enable){
-		SET_BIT(TIMSK_ , TIMSK_TOIE2) ;			//Enable Timer interrupt
+	CLEAR_BIT(TCCR_2 , WGM20) ;
+	CLEAR_BIT(TCCR_2 , WGM21) ;
+	
+	switch ( Mode ) 
+	{
+		case Normal : 
+			break;
+		case PWM : 
+			SET_BIT(TCCR_2 , WGM20) ;
+			break;
+		case CTC :
+			SET_BIT(TCCR_2 , WGM21) ;
+			break;
+		case Fast_PWM :
+			SET_BIT(TCCR_2 , WGM20) ;
+			SET_BIT(TCCR_2 , WGM21) ;
+			break;
+		default:
+			break;
 	}
 	
 	switch ( pres ){
@@ -194,6 +224,27 @@ void TMR_voidInitTimer2(prescallar pres , State interupt , Modes Mode)
 		default:
 			break;
 	}
+	
+	sei() ;
+	
+	switch ( interupt ){
+		case Enable :
+			if ( Mode == CTC ){
+				SET_BIT(TIMSK_ , TIMSK_OCIE2) ;}
+			else{
+				SET_BIT(TIMSK_ , TIMSK_TOIE2) ;}
+			break;
+		case Disable :
+			if ( Mode == CTC ){
+				CLEAR_BIT(TIMSK_ , TIMSK_OCIE2) ;}
+			else{
+				CLEAR_BIT(TIMSK_ , TIMSK_TOIE2) ;}
+			break;
+		default:
+			break;
+			
+	}
+	
 }
 
 void TMR_voidSetTimer2Count(u8 value)
