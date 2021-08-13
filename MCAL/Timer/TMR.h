@@ -32,6 +32,8 @@
 #define TIMSK_OCIE1B	3
 #define TIMSK_OCIE1A	4
 #define TIMSK_TOIE2		6
+#define TIMSK_OCIE2		7
+
 
 #define TIFR_TOV0		0
 #define TIFR_OCF0		1
@@ -42,6 +44,8 @@
 #define CS00			0
 #define CS01			1
 #define CS02			2
+#define WGM01			3
+#define WGM00			6
 
 #define CS10			0
 #define CS11			1
@@ -50,6 +54,8 @@
 #define CS20			0
 #define CS21			1
 #define CS22			2
+#define WGM21			3
+#define WGM20			6
 /****************************************************************/
 
 /********************** Prescaller Modes ***********************/
@@ -67,7 +73,9 @@ typedef enum {
 /************************ Timer Modes *************************/
 typedef enum{
 	Normal ,
+	PWM ,
 	CTC ,
+	Fast_PWM
 } Modes ;
 /**************************************************************/
 
@@ -75,28 +83,29 @@ typedef enum{
 typedef enum{
 	Enable ,
 	Disable ,
-} State ;
+} Interrupt_State ;
 /**************************************************************/
 
 
 /********************** Timer0 Functions ***********************/
-void TMR_voidInitTimer0(prescallar pres , State interupt , Modes Mode) ;
+void TMR_voidInitTimer0(prescallar pres , Interrupt_State interupt , Modes Mode) ;
 void TMR_voidSetTimer0Count(u8 value);
 u8 TMR_u16GetTimer0Count(void);
 /**************************************************************/
 
 
 /********************** Timer1 Functions ***********************/
-void TMR_voidInitTimer1(prescallar pres , State interupt , Modes Mode) ;
+void TMR_voidInitTimer1(prescallar pres , Interrupt_State interupt , Modes Mode) ;
 void TMR_voidSetTimer1Count(u8 value);
 u8 TMR_u16GetTimer1Count(void);
 /**************************************************************/
 
 
 /********************** Timer2 Functions ***********************/
-void TMR_voidInitTimer2(prescallar pres , State interupt , Modes Mode) ;
+void TMR_voidInitTimer2(prescallar pres , Interrupt_State interupt , Modes Mode) ;
 void TMR_voidSetTimer2Count(u8 value);
 u8 TMR_u16GetTimer2Count(void);
 /**************************************************************/
+
 
 #endif /* TMR_H_ */
