@@ -93,17 +93,31 @@ void TMR_voidInitTimer1(prescallar pres , Interrupt_State interupt , Modes Mode)
 	CLEAR_BIT(TCCR_1B , CS11) ;
 	CLEAR_BIT(TCCR_1B , CS12) ;
 	
-	if (Mode == CTC)
+	switch ( Mode )
 	{
-		SET_BIT(TCCR_1B , 4) ;
-	}
-	else{
-		TCCR_1B = 0x00 ;
+		case Normal :
+			break;
+		case PWM :
+			SET_BIT(TCCR_1A , WGM10) ;
+			SET_BIT(TCCR_1A , WGM11) ;
+			break;
+		case CTC :
+			SET_BIT(TCCR_1B , WGM12) ;
+			break;
+		case Fast_PWM :
+			SET_BIT(TCCR_1A , WGM11) ;
+			break;
+		default:
+			break;
 	}
 	
-	sei() ;
-	if ((interupt == Enable) && (Mode != CTC)){
+	if ((interupt == Enable) && (Mode != CTC))
+	{
 		SET_BIT(TIMSK_ , TIMSK_TOIE1) ;			//Enable Timer interrupt
+	}
+	else
+	{
+		SET_BIT(TIMSK_ , TIMSK_OCIE1A) ;
 	}
 	
 	switch ( pres ){
