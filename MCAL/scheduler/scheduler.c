@@ -1,13 +1,11 @@
-﻿/*
+/*
  * scheduler.c
  *
  * Created: 08/08/2021 02:14:22 AM
  *  Author: Salma
  */ 
 
-
 #include "scheduler.h"
-
 
 /************** PRIVATE FUNCTIONS PROTOTYPES ***************/
 /*Description : Put the system into 'Sleep' mode
@@ -31,6 +29,12 @@ sTask SCH_tasks_G[SCH_MAX_TASKS] ;
 //Used to display the error code
 u16 Error_Code_G = 0 ;
 
+//This is the scheduler ISR.
+ISR ( TIMER1_COMPA_vect )
+{
+	SCH_Update() ;
+}
+
 void SCH_Init_T2 (void) 
 {
 	u16 i ;
@@ -45,9 +49,10 @@ void SCH_Init_T2 (void)
 	// (because the task array is empty)
 	Error_Code_G = 0 ;
 	
-	TMR_voidInitTimer1(prescallar_1024 , Enable , Normal) ;
-	TMR_voidSetTimer1Count( timer_value ) ;
-	
+	TMR_voidInitTimer1(prescallar_1 , Enable , CTC) ;
+	timer_value = F_CPU * TICK_ms / 1000 ;
+	OCR_1A = timer_value ;
+	TMR_voidSetTimer1Count( 0 ) ;
 }
 
 u16 SCH_Add_Task( void (*pFunction) , const u8 DELAY , const u8 PERIOD) 
@@ -185,3 +190,33 @@ void SCH_Report_Status(void)
 #endif
 }
 
+void SCH_Update (void)
+{
+	u16 Index ;
+	
+	//INTF2 = 0 ;		// Have to manually clear this. 
+	
+	for ( Index=0 ; Index<SCH_MAX_TASKS ; Index++ )
+	{
+		//Check if there is a task at this location
+		if ( SCH_tasks_G[Index].ptask )
+		{
+			if ( SCH_tasks_G[Index].delay == 0 )
+			{
+				//The task is due to run
+				SCH_tasks_G[Index].RunMe += 1 ;		//Inc. the 'RunMe' flag
+			
+				if ( SCH_tasks_G[Index].priod )
+				{
+					//Schedule periodic tasks to run again
+					SCH_tasks_G[Index].delay = SCH_tasks_G[Index].priod ;
+				}
+			}
+			else
+			{
+				//Not yet ready to run : just decrement the delay
+				SCH_tasks_G[Index].delay -= 1 ;
+			}
+		}
+	}
+}
