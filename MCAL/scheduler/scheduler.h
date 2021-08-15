@@ -1,4 +1,4 @@
-﻿/*
+/*
  * scheduler.h
  *
  * Created: 08/08/2021 02:14:08 AM
@@ -14,14 +14,18 @@
 
 #include "TMR.h"
 #include <avr/interrupt.h>
-	
-#define INTERRUPT_Timer_2_Overflow 5
-	
+			
 /*************** PUBPLIC CONSTANTS ****************/
-//The maximum number of tasks required at any one time
-#define SCH_MAX_TASKS	(1)			
+// The maximum number of tasks required at any one time
+// during the execution of the program
+//
+// MUST BE ADJUSTED FOR EACH NEW PROJECT
+#define SCH_MAX_TASKS	(3)			
 #define Error_port	PORT_A
 /*************************************************/
+
+#define F_CPU		8000000		//The crystal oscillator frequency
+#define TICK_ms		(5)			//Determine the tick time in ms
 
 /***************** ERROR CODES ******************/
 #define ERROR_SCH_TOO_MANY_TASKS (1)
@@ -90,5 +94,13 @@ u16 SCH_Delete_Task(const u16 Task_Index) ;
   Return type : void */
 void SCH_Report_Status(void) ;
 
-	
+/*Description : This is the scheduler ISR. It is called at a rate
+				determined by the timer settings in the 'init' function.
+				This version is triggered by Timer 2 interrupts:
+				timer is automatically reloaded.
+  Parameters  : none
+  Return type : void */
+void SCH_Update (void) ;
+
+
 #endif /* SCHEDULER_H_ */
