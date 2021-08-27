@@ -5,8 +5,6 @@
  *  Author: Salma
  */ 
 
-#include "BITMATH.h"
-#include "STD_TYPES.h"
 
 #include "GPIO.h"
 
