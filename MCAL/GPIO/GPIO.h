@@ -9,6 +9,9 @@
 #ifndef GPIO_H_
 #define GPIO_H_
 
+#include "BITMATH.h"
+#include "STD_TYPES.h"
+
 	/* Registers Definition */
 
 	/* PORTA Register*/
